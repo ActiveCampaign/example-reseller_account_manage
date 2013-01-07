@@ -23,10 +23,6 @@ Resellers can find their API URL and key in the reseller administration interfac
 
 ![Finding your API Key](http://d226aj4ao1t61q.cloudfront.net/jcgbye7yp_screenshot2012-09-18at10.35.10am.jpg)
 
-Our HTML form (for the first step) will look like this:
-
-![Our HTML form so far](http://d226aj4ao1t61q.cloudfront.net/k9n2wq4s3_screenshot2012-09-18at11.12.55am.jpg)
-
 ## Documentation and Links
 
 * [Blog post: Manage Your Reseller Accounts with our API](http://www.activecampaign.com/blog/manage-your-reseller-accounts-with-our-api/)
