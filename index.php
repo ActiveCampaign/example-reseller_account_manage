@@ -138,29 +138,6 @@
 
 					}
 
-				}
-
-			}
-			elseif ($form_step == 2) {
-
-				$name = $_POST["template_name"];
-				$html = $_POST["template_html"];
-
-				$template = array(
-					"name" => $name,
-					"html" => htmlspecialchars($html),
-					"template_scope" => "all",
-				);
-
-				$template = $ac->api("message/template_add", $template);
-
-				if (!(int)$template->success) {
-					$alert = $template->error;
-				}
-				else {
-
-					$template_edit_link = "http://" . $_SESSION["account_name"] . ".{$your_domain}/admin/main.php?action=template#form-{$template->id}";
-
 					// get SSO link
 					//$username = $_SESSION["username"];
 					$username = "admin";
@@ -180,6 +157,14 @@
 					}
 
 				}
+
+			}
+			elseif ($form_step == 2) {
+
+
+
+
+
 
 			}
 			elseif ($step == 101) {
@@ -347,7 +332,7 @@
 			<?php
 
 		}
-		elseif ($step == 2) {
+		elseif ($step == 3) {
 
 			?>
 
@@ -373,7 +358,7 @@
 			<?php
 
 		}
-		elseif ($step == 3) {
+		elseif ($step == 2) {
 
 			?>
 
