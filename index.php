@@ -321,7 +321,7 @@
 			<h1>Add Account</h1>
 
 			<h2>Account Name</h2>
-			<input type="text" name="account_name" size="30" /><code>.yourdomain.com</code>
+			<input type="text" name="account_name" size="30" /><code>.<?php echo $your_domain; ?></code>
 
 			<h2>Client Name</h2>
 			<input type="text" name="client_name" size="30" />
