@@ -375,7 +375,6 @@
 			<p><a href="<?php echo $ui_url; ?>"><?php echo $ui_url; ?></a></p>
 			<p>Your username is <code>admin</code>, and your password is <code><?php echo $_SESSION["account_admin_password"]; ?></code>.</p>
 			<p>You can also automatically log-in by <a href="<?php echo $sso_url; ?>">clicking this link</a>!</p>
-			<p>We have created a default template for you, which can be <a href="<?php echo $template_edit_link; ?>">edited here</a>. This template can be used when creating new campaigns.</p>
 
 			<?php
 
