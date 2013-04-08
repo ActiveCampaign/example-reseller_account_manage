@@ -134,25 +134,25 @@
 							$_SESSION["account_api_url"] = $user_me->apiurl;
 							$_SESSION["account_api_key"] = $user_me->apikey;
 
+							// get SSO link
+							//$username = $_SESSION["username"];
+							$username = "admin";
+							$ip = $_SERVER["REMOTE_ADDR"];
+							if ($ip == "::1") $ip = "127.0.0.1";
+
+							$sso = $ac2->api("auth/singlesignon?sso_user={$username}&sso_addr={$ip}&sso_duration=20");
+
+							if (!(int)$sso->success) {
+								$alert = $sso->error;
+							}
+							else {
+
+								$ui_url = "http://" . $_SESSION["account_name"] . ".{$your_domain}/admin";
+								$sso_url = "http://" . $_SESSION["account_name"] . ".{$your_domain}/admin/main.php?_ssot={$sso->token}";
+
+					}
+
 						}
-
-					}
-
-					// get SSO link
-					//$username = $_SESSION["username"];
-					$username = "admin";
-					$ip = $_SERVER["REMOTE_ADDR"];
-					if ($ip == "::1") $ip = "127.0.0.1";
-
-					$sso = $ac->api("auth/singlesignon?sso_user={$username}&sso_addr={$ip}&sso_duration=20");
-
-					if (!(int)$sso->success) {
-						$alert = $sso->error;
-					}
-					else {
-
-						$ui_url = "http://" . $_SESSION["account_name"] . ".{$your_domain}/admin";
-						$sso_url = "http://" . $_SESSION["account_name"] . ".{$your_domain}/admin/main.php?_ssot={$sso->token}";
 
 					}
 
