@@ -222,7 +222,7 @@
 
 					foreach ($cancels as $account_name) {
 
-						$cancel = $ac->api("account/cancel?account={$account_name}");
+						$cancel = $ac->api("account/cancel?account={$account_name}&reason=testing");
 
 						if (!(int)$cancel->success) {
 							//$alert = $cancel->error;
