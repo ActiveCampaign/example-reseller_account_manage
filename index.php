@@ -134,6 +134,20 @@
 							$_SESSION["account_api_url"] = $user_me->apiurl;
 							$_SESSION["account_api_key"] = $user_me->apikey;
 
+							// create "New List" webhook?
+							/*
+							$webhook = array(
+								"name" => "New List hook",
+								"url" => "http://requestb.in/hajsgd",
+								"action[list_add]" => "list_add",
+								"init[public]" => "public",
+								"init[admin]" => "admin",
+								"init[api]" => "api",
+								"init[system]" => "system",
+							);
+							$webhook = $ac2->api("webhook/add", $webhook);
+							*/
+
 						}
 
 					}
