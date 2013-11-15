@@ -98,7 +98,8 @@
 					  "name": "' . $client_name . '",
 					  "email": "' . $client_email . '",
 					  "notification": "' . $client_email . '",
-					  "plan": "' . $plan . '"
+					  "plan": "' . $plan . '",
+					  "lang": "english"
 					}'));
 
 					$account = $ac->api("account/add", $account);
