@@ -99,7 +99,8 @@
 					  "email": "' . $client_email . '",
 					  "notification": "' . $client_email . '",
 					  "plan": "' . $plan . '",
-					  "lang": "english"
+					  "language": "english",
+					  "timezone": "America/Chicago"
 					}'));
 
 					$account = $ac->api("account/add", $account);
