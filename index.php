@@ -56,6 +56,7 @@
 
 	require_once($path_to_api_wrapper . "/ActiveCampaign.class.php");
 	$ac = new ActiveCampaign(ACTIVECAMPAIGN_URL, ACTIVECAMPAIGN_API_KEY);
+//$ac->debug = true;
 
 	$alert = "";
 	$step = ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["step"]) && (int)$_GET["step"]) ? (int)$_GET["step"] : 1;
@@ -80,6 +81,7 @@
 
 				// check if account name already exists
 				$name_exists = $ac->api("account/name_check?account={$account_name}");
+//dbg($name_exists);
 
 				if (!(int)$name_exists->success) {
 					$alert = $name_exists->error;
@@ -102,6 +104,11 @@
 					  "language": "english",
 					  "timezone": "America/Chicago"
 					}'));
+
+					if ($account["plan"] == "free") {
+						$account["plan"] = 0;
+						$account["free"] = 1;
+					}
 
 					$account = $ac->api("account/add", $account);
 
@@ -310,6 +317,10 @@
 	if ($step == 1 || $step == 103) {
 		// get plans
 		$plans = $ac->api("account/plans");
+		$plans->plans->free = array(
+			"id" => 0,
+			"limit_sub" => 2500,
+		);
 	}
 
 ?>
@@ -349,12 +360,16 @@
 			<select name="plan">
 				<?php
 
-					foreach ($plans->plans as $plan) {
-						?>
-
-						<option value="<?php echo $plan->id; ?>"><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?>)</option>
-
-						<?php
+					foreach ($plans->plans as $k => $plan) {
+						if ($k == "free") {
+							?>
+							<option value="free"><?php echo $plan["limit_sub"]; ?> Subscribers (Plan ID: <?php echo $plan["id"]; ?> - Forever free)</option>
+							<?php
+						} else {
+							?>
+							<option value="<?php echo $plan->id; ?>"><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?>)</option>
+							<?php
+						}
 					}
 
 				?>
@@ -514,12 +529,16 @@
 					<select name="account_edit_plan">
 						<?php
 
-							foreach ($plans->plans as $plan) {
-								?>
-
-								<option value="<?php echo $plan->id; ?>"<?php if ((int)$plan->id == (int)$account_edit["planid"]) echo " selected=\"selected\""; ?>><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?>)</option>
-
-								<?php
+							foreach ($plans->plans as $k => $plan) {
+								if ($k == "free") {
+									?>
+									<option value="free"<?php if ($plan->id == "free") echo " selected=\"selected\""; ?>><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?> - Forever free)</option>
+									<?php
+								} else {
+									?>
+									<option value="<?php echo $plan->id; ?>"<?php if ((int)$plan->id == (int)$account_edit["planid"]) echo " selected=\"selected\""; ?>><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?>)</option>
+									<?php
+								}
 							}
 
 						?>
