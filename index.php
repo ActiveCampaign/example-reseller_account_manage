@@ -456,7 +456,7 @@
 					<th>CNAME</th>
 					<th>Plan ID</th>
 					<th>Client Name</th>
-					<th>Reseller Status</th>
+					<th>Log-in Status (can the client log-in via the web?)</th>
 					<th>Edit?</th>
 					<th>Cancel?</th>
 				</tr>
@@ -545,7 +545,7 @@
 						?>
 					</select>
 
-					<h3>Reseller Status</h3>
+					<h3>Log-in Status (can the client log-in via the web?)</h3>
 					<select name="account_edit_reseller_status">
 						<option value="0"<?php if ((int)$account_edit["reseller_status"] == 0) echo " selected=\"selected\""; ?>>Active</option>
 						<option value="1"<?php if ((int)$account_edit["reseller_status"] == 1) echo " selected=\"selected\""; ?>>Inactive</option>
