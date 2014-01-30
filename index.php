@@ -269,7 +269,7 @@
 				$subdomain = $_POST["account_edit_subdomain"];
 				$fulldomain = $subdomain . ".activehosted.com";
 				$cname = $_POST["account_edit_cname"];
-				$notification = $_POST["account_edit_notification"];
+				$notification = ""; //$_POST["account_edit_notification"];
 				$plan = $_POST["account_edit_plan"];
 				$reseller_status = (int)$_POST["account_edit_reseller_status"];
 				$reseller_status_message = $_POST["account_edit_reseller_status_message"];
@@ -447,12 +447,10 @@
 			<table border="1" cellspacing="0" cellpadding="3">
 
 				<tr>
-					<th>ID</th>
 					<th>Account</th>
 					<th>CNAME</th>
 					<th>Plan ID</th>
 					<th>Client Name</th>
-					<th>Client Email</th>
 					<th>Reseller Status</th>
 					<th>Edit?</th>
 					<th>Cancel?</th>
@@ -462,18 +460,16 @@
 
 					foreach ($_SESSION["account_list"]->accounts as $account) {
 
-						$reseller_status_word = ((int)$account->reseller_status == 0) ? "Active" : "Inactive";
+						$reseller_status_word = ((int)$account->reseller_status == 0) ? "<span style='color: green;'>Active</span>" : "<span style='color: red;'>Inactive</span>";
 
 						?>
 
 						<tr>
-							<td><?php //echo $account->id; ?></td>
 							<td><?php echo $account->account; ?></td>
 							<td><?php echo $account->cname; ?></td>
 							<td><?php echo $account->planid; ?></td>
 							<td><?php echo $account->client_name; ?></td>
-							<td><?php //echo $account->client_email; ?></td>
-							<td><?php echo $reseller_status_word; ?></td>
+							<td style="font-weight: bold;"><?php echo $reseller_status_word; ?></td>
 							<td><input type="radio" name="edit[]" value="<?php echo $account->account; ?>" /></td>
 							<td><input type="checkbox" name="cancels[]" value="<?php echo $account->account; ?>" /></td>
 						</tr>
@@ -532,7 +528,7 @@
 							foreach ($plans->plans as $k => $plan) {
 								if ($k == "free") {
 									?>
-									<option value="free"<?php if ($plan->id == "free") echo " selected=\"selected\""; ?>><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?> - Forever free)</option>
+									<option value="free"<?php if ($plan["id"] == "free") echo " selected=\"selected\""; ?>><?php echo $plan["limit_sub"]; ?> Subscribers (Plan ID: <?php echo $plan["id"]; ?> - Forever free)</option>
 									<?php
 								} else {
 									?>
