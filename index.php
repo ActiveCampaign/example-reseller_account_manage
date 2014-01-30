@@ -246,16 +246,42 @@
 					foreach ($cancels as $account_name) {
 
 						$cancel = $ac->api("account/cancel?account={$account_name}&reason=testing");
-$ac->debug = true;
+//$ac->debug = true;
+
 						if (!(int)$cancel->success) {
-							//$alert = $cancel->error;
 							$cancel_results[$account_name] = $cancel->error;
 						}
 						else {
 							$cancel_results[$account_name] = $cancel->message;
 						}
 
-						sleep(10);
+						sleep(5);
+
+					}
+
+				}
+
+				if (isset($_POST["uncancels"])) {
+
+					// when billing is stopped, and you want to re-enable (renew) billing (have it start again).
+
+					$uncancels = $_POST["uncancels"];
+
+					$uncancel_results = array();
+
+					foreach ($uncancels as $account_name) {
+
+						$uncancel = $ac->api("account/status?account={$account_name}&status=active");
+//$ac->debug = true;
+
+						if (!(int)$uncancel->success) {
+							$uncancel_results[$account_name] = $uncancel->error;
+						}
+						else {
+							$uncancel_results[$account_name] = $uncancel->message;
+						}
+
+						sleep(5);
 
 					}
 
