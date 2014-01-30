@@ -469,14 +469,25 @@ $ac->debug = true;
 
 						?>
 
-						<tr>
+						<tr style="<?php if ($account->planid == 2) { echo "color: #ccc;"; } ?>">
 							<td><?php echo $account->account; ?></td>
 							<td><?php echo $account->cname; ?></td>
 							<td><?php echo $account->planid; ?></td>
 							<td><?php echo $account->client_name; ?></td>
 							<td style="font-weight: bold;"><?php echo $reseller_status_word; ?></td>
 							<td><input type="radio" name="edit[]" value="<?php echo $account->account; ?>" /></td>
-							<td><input type="checkbox" name="cancels[]" value="<?php echo $account->account; ?>" /></td>
+							<td>
+								<input type="checkbox" name="<?php if ($account->planid == 2) { echo "un"; } ?>cancels[]" id="cancels_<?php echo $account->account; ?>" value="<?php echo $account->account; ?>" />
+								<?php
+
+									if ($account->planid == 2) {
+										?>
+										<label for="cancels_<?php echo $account->account; ?>" style="color: green;">Re-enable billing?</label>
+										<?php
+									}
+
+								?>
+							</td>
 						</tr>
 
 						<?php
