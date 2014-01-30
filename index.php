@@ -246,7 +246,7 @@
 					foreach ($cancels as $account_name) {
 
 						$cancel = $ac->api("account/cancel?account={$account_name}&reason=testing");
-
+$ac->debug = true;
 						if (!(int)$cancel->success) {
 							//$alert = $cancel->error;
 							$cancel_results[$account_name] = $cancel->error;
@@ -458,7 +458,7 @@
 					<th>Client Name</th>
 					<th>Log-in Status <span style="font-size: 10px;">(can the client log-in via the web?)</span></th>
 					<th>Edit?</th>
-					<th>Cancel?</th>
+					<th>Cancel? <span style="font-size: 10px;">(stop billing?)</span></th>
 				</tr>
 
 				<?php
