@@ -272,7 +272,7 @@
 					foreach ($uncancels as $account_name) {
 
 						$uncancel = $ac->api("account/status?account={$account_name}&status=active");
-//$ac->debug = true;
+$ac->debug = true;
 
 						if (!(int)$uncancel->success) {
 							$uncancel_results[$account_name] = $uncancel->error;
@@ -316,7 +316,7 @@
 //dbg($edit);
 
 				if (!(int)$edit->success) {
-					$alert = $template->error;
+					$alert = $edit->error;
 				}
 				else {
 
