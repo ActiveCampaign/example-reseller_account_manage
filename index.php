@@ -214,22 +214,22 @@
 			}
 			elseif ($step == 102) {
 
-				$account_edit = $cancel_results = array();
+				$_SESSION["account_edit"] = $cancel_results = array();
 
 				if (isset($_POST["edit"]) && isset($_POST["edit"][0])) {
 
-					$account_edit = $_POST["edit"][0];
+					$_SESSION["account_edit"] = $_POST["edit"][0];
 
 					// we already have the accounts in the session, so just look for a match
 					foreach ($_SESSION["account_list"]->accounts as $account) {
 
-						if ($account->account == $account_edit) {
+						if ($account->account == $_SESSION["account_edit"]) {
 
 							// set var for HTML form
-							$account_edit = get_object_vars($account);
+							$_SESSION["account_edit"] = get_object_vars($account);
 
 							// so we know if they changed this value on the next submit
-							$_SESSION["account_edit_reseller_status"] = $account_edit["reseller_status"];
+							$_SESSION["account_edit_reseller_status"] = $_SESSION["account_edit"]["reseller_status"];
 
 						}
 
@@ -241,7 +241,7 @@
 
 					$cancels = $_POST["cancels"];
 
-					$cancel_results = array();
+					$_SESSION["cancel_results"] = array();
 
 					foreach ($cancels as $account_name) {
 
@@ -249,10 +249,10 @@
 //$ac->debug = true;
 
 						if (!(int)$cancel->success) {
-							$cancel_results[$account_name] = $cancel->error;
+							$_SESSION["cancel_results"][$account_name] = $cancel->error;
 						}
 						else {
-							$cancel_results[$account_name] = $cancel->message;
+							$_SESSION["cancel_results"][$account_name] = $cancel->message;
 						}
 
 						sleep(5);
@@ -267,7 +267,7 @@
 
 					$uncancels = $_POST["uncancels"];
 
-					$uncancel_results = array();
+					$_SESSION["uncancel_results"] = array();
 
 					foreach ($uncancels as $account_name) {
 
@@ -275,10 +275,10 @@
 $ac->debug = true;
 
 						if (!(int)$uncancel->success) {
-							$uncancel_results[$account_name] = $uncancel->error;
+							$_SESSION["uncancel_results"][$account_name] = $uncancel->error;
 						}
 						else {
-							$uncancel_results[$account_name] = $uncancel->message;
+							$_SESSION["uncancel_results"][$account_name] = $uncancel->message;
 						}
 
 						sleep(5);
@@ -495,7 +495,7 @@ $ac->debug = true;
 
 						?>
 
-						<tr style="<?php if ($account->planid == 2) { echo "color: #ccc;"; } ?>">
+						<tr style="<?php if ($account->planid == 999999999) { echo "color: #ccc;"; } ?>">
 							<td><?php echo $account->account; ?></td>
 							<td><?php echo $account->cname; ?></td>
 							<td><?php echo $account->planid; ?></td>
@@ -503,10 +503,10 @@ $ac->debug = true;
 							<td style="font-weight: bold;"><?php echo $reseller_status_word; ?></td>
 							<td><input type="radio" name="edit[]" value="<?php echo $account->account; ?>" /></td>
 							<td>
-								<input type="checkbox" name="<?php if ($account->planid == 2) { echo "un"; } ?>cancels[]" id="cancels_<?php echo $account->account; ?>" value="<?php echo $account->account; ?>" />
+								<input type="checkbox" name="<?php if ($account->planid == 999999999) { echo "un"; } ?>cancels[]" id="cancels_<?php echo $account->account; ?>" value="<?php echo $account->account; ?>" />
 								<?php
 
-									if ($account->planid == 2) {
+									if ($account->planid == 999999999) {
 										?>
 										<label for="cancels_<?php echo $account->account; ?>" style="color: green;">Re-enable billing?</label>
 										<?php
@@ -535,8 +535,8 @@ $ac->debug = true;
 				Edit Account
 				<?php
 
-					if ($account_edit) {
-						echo "(" . $account_edit["account"] . ")";
+					if ($_SESSION["account_edit"]) {
+						echo "(" . $_SESSION["account_edit"]["account"] . ")";
 					}
 
 				?>
@@ -544,10 +544,10 @@ $ac->debug = true;
 
 			<?php
 
-				if ($account_edit) {
+				if ($_SESSION["account_edit"]) {
 
 					// grab just the sub-domain name (IE: myaccount.activehosted.com grabs just "myaccount")
-					$account_subdomain_preg = preg_match("/^[^\.]*/", $account_edit["account"], $account_subdomain);
+					$account_subdomain_preg = preg_match("/^[^\.]*/", $_SESSION["account_edit"]["account"], $account_subdomain);
 					//$reseller_status_word = ((int)$account_edit["reseller_status"] == 0) ? "Active" : "Inactive";
 
 					?>
@@ -556,7 +556,7 @@ $ac->debug = true;
 					<input type="text" name="account_edit_subdomain" value="<?php echo $account_subdomain[0]; ?>" size="30" />
 
 					<h3>CNAME</h3>
-					<input type="text" name="account_edit_cname" value="<?php echo $account_edit["cname"]; ?>" size="30" />
+					<input type="text" name="account_edit_cname" value="<?php echo $_SESSION["account_edit"]["cname"]; ?>" size="30" />
 
 					<!--
 					<h3>Notification Email</h3>
@@ -574,7 +574,7 @@ $ac->debug = true;
 									<?php
 								} else {
 									?>
-									<option value="<?php echo $plan->id; ?>"<?php if ((int)$plan->id == (int)$account_edit["planid"]) echo " selected=\"selected\""; ?>><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?>)</option>
+									<option value="<?php echo $plan->id; ?>"<?php if ((int)$plan->id == (int)$_SESSION["account_edit"]["planid"]) echo " selected=\"selected\""; ?>><?php echo $plan->limit_sub; ?> Subscribers (Plan ID: <?php echo $plan->id; ?>)</option>
 									<?php
 								}
 							}
@@ -584,8 +584,8 @@ $ac->debug = true;
 
 					<h3>Log-in Status (can the client log-in via the web?)</h3>
 					<select name="account_edit_reseller_status">
-						<option value="0"<?php if ((int)$account_edit["reseller_status"] == 0) echo " selected=\"selected\""; ?>>Active</option>
-						<option value="1"<?php if ((int)$account_edit["reseller_status"] == 1) echo " selected=\"selected\""; ?>>Inactive</option>
+						<option value="0"<?php if ((int)$_SESSION["account_edit"]["reseller_status"] == 0) echo " selected=\"selected\""; ?>>Active</option>
+						<option value="1"<?php if ((int)$_SESSION["account_edit"]["reseller_status"] == 1) echo " selected=\"selected\""; ?>>Inactive</option>
 					</select>
 
 					<p><input type="text" name="account_edit_reseller_status_message" value="" size="60" placeholder="If Inactive, provide optional message" /></p>
@@ -609,9 +609,9 @@ $ac->debug = true;
 
 			<?php
 
-			if ($cancel_results) {
+			if (isset($_SESSION["cancel_results"])) {
 
-				foreach ($cancel_results as $account_name => $api_result) {
+				foreach ($_SESSION["cancel_results"] as $account_name => $api_result) {
 
 					?>
 
