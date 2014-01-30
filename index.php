@@ -456,7 +456,7 @@
 					<th>CNAME</th>
 					<th>Plan ID</th>
 					<th>Client Name</th>
-					<th>Log-in Status (can the client log-in via the web?)</th>
+					<th>Log-in Status <span style="font-size: 10px;">(can the client log-in via the web?)</span></th>
 					<th>Edit?</th>
 					<th>Cancel?</th>
 				</tr>
