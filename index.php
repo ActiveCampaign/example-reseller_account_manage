@@ -281,6 +281,11 @@
 					"plan" => $plan,
 				);
 
+				if ($account["plan"] == "free") {
+					$account["plan"] = 0;
+					$account["free"] = 1;
+				}
+
 				$edit = $ac->api("account/edit", $account);
 //dbg($edit);
 
