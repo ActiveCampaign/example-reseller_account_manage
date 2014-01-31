@@ -246,40 +246,14 @@
 
 					foreach ($cancels as $account_name) {
 
+//$ac->debug = true;
 						$cancel = $ac->api("account/cancel?account={$account_name}&reason=testing");
-$ac->debug = true;
 
-						if (!(int)$cancel->success) {
-							$_SESSION["cancel_results"][$account_name] = $cancel->error;
+						if (!(int)$cancel->result_code) {
+							$_SESSION["cancel_results"][$account_name] = $cancel->result_message;
 						}
 						else {
-							$_SESSION["cancel_results"][$account_name] = $cancel->message;
-						}
-
-						sleep(5);
-
-					}
-
-				}
-
-				if (isset($_POST["uncancels"])) {
-
-					// when billing is stopped, and you want to re-enable (renew) billing (have it start again).
-
-					$uncancels = $_POST["uncancels"];
-
-					$_SESSION["uncancel_results"] = array();
-
-					foreach ($uncancels as $account_name) {
-
-						$uncancel = $ac->api("account/status?account={$account_name}&status=active");
-$ac->debug = true;
-
-						if (!(int)$uncancel->success) {
-							$_SESSION["uncancel_results"][$account_name] = $uncancel->error;
-						}
-						else {
-							$_SESSION["uncancel_results"][$account_name] = $uncancel->message;
+							$_SESSION["cancel_results"][$account_name] = $cancel->result_message;
 						}
 
 						sleep(5);
@@ -313,8 +287,8 @@ $ac->debug = true;
 					$account["free"] = 1;
 				}
 
+//$ac->debug = true;
 				$edit = $ac->api("account/edit", $account);
-//dbg($edit);
 
 				if (!(int)$edit->success) {
 					$alert = $edit->error;
@@ -507,12 +481,12 @@ $ac->debug = true;
 							<td style="font-weight: bold;"><?php echo $billing_status_word; ?></td>
 							<td><input type="radio" name="edit[]" value="<?php echo $account->account; ?>" /></td>
 							<td>
-								<input type="checkbox" name="<?php if ($account->planid == 999999999) { echo "un"; } ?>cancels[]" id="cancels_<?php echo $account->account; ?>" value="<?php echo $account->account; ?>" />
+								<input type="checkbox" name="<?php if ($account->cancelled == "true") { echo "un"; } ?>cancels[]" id="cancels_<?php echo $account->account; ?>" value="<?php echo $account->account; ?>" />
 								<?php
 
 									if ($account->cancelled == "true") {
 										?>
-										<label for="cancels_<?php echo $account->account; ?>" style="color: green;">Re-enable billing?</label>
+										(EDIT this account to re-enable billing)
 										<?php
 									}
 
