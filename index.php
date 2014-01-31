@@ -4,7 +4,7 @@
 
 	$your_domain = "yourdomain.com";
 	$reseller_api_url = "https://www.activecampaign.com";
-	$reseller_api_key = "";
+	$reseller_api_key = "13d422639b2d02e555c29eefcdb0df54ce8d16ab85eee53be0eb82a528ec8021fb4e8263";
 	$path_to_api_wrapper = "../../activecampaign-api-php/includes";
 
 	function dbg($var, $continue = 0, $element = "pre")
@@ -208,6 +208,7 @@
 			elseif ($step == 101) {
 
 				$_SESSION["account_list_search"] = $search = $_POST["account_filter"];
+//$ac->debug = true;
 				$_SESSION["account_list"] = $account_list = $ac->api("account/list?search={$search}");
 //dbg($account_list);
 
@@ -246,7 +247,7 @@
 					foreach ($cancels as $account_name) {
 
 						$cancel = $ac->api("account/cancel?account={$account_name}&reason=testing");
-//$ac->debug = true;
+$ac->debug = true;
 
 						if (!(int)$cancel->success) {
 							$_SESSION["cancel_results"][$account_name] = $cancel->error;
@@ -483,6 +484,7 @@ $ac->debug = true;
 					<th>Plan ID</th>
 					<th>Client Name</th>
 					<th>Log-in Status <span style="font-size: 10px;">(can the client log-in via the web?)</span></th>
+					<th>Billing Status <span style="font-size: 10px;">(is the client being charged?)</span></th>
 					<th>Edit?</th>
 					<th>Cancel? <span style="font-size: 10px;">(stop billing?)</span></th>
 				</tr>
@@ -491,22 +493,24 @@ $ac->debug = true;
 
 					foreach ($_SESSION["account_list"]->accounts as $account) {
 
-						$reseller_status_word = ((int)$account->reseller_status == 0) ? "<span style='color: green;'>Active</span>" : "<span style='color: red;'>Inactive</span>";
+						$login_status_word = ((int)$account->reseller_status == 0) ? "<span style='color: green;'>Active</span>" : "<span style='color: red;'>Inactive</span>";
+						$billing_status_word = ($account->cancelled != "true") ? "<span style='color: green;'>Active</span>" : "<span style='color: red;'>Inactive</span>";
 
 						?>
 
-						<tr style="<?php if ($account->planid == 999999999) { echo "color: #ccc;"; } ?>">
+						<tr style="<?php if ($account->cancelled == "true") { echo "color: #ccc;"; } ?>">
 							<td><?php echo $account->account; ?></td>
 							<td><?php echo $account->cname; ?></td>
 							<td><?php echo $account->planid; ?></td>
 							<td><?php echo $account->client_name; ?></td>
-							<td style="font-weight: bold;"><?php echo $reseller_status_word; ?></td>
+							<td style="font-weight: bold;"><?php echo $login_status_word; ?></td>
+							<td style="font-weight: bold;"><?php echo $billing_status_word; ?></td>
 							<td><input type="radio" name="edit[]" value="<?php echo $account->account; ?>" /></td>
 							<td>
 								<input type="checkbox" name="<?php if ($account->planid == 999999999) { echo "un"; } ?>cancels[]" id="cancels_<?php echo $account->account; ?>" value="<?php echo $account->account; ?>" />
 								<?php
 
-									if ($account->planid == 999999999) {
+									if ($account->cancelled == "true") {
 										?>
 										<label for="cancels_<?php echo $account->account; ?>" style="color: green;">Re-enable billing?</label>
 										<?php
