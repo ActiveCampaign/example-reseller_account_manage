@@ -4,7 +4,7 @@
 
 	$your_domain = "yourdomain.com";
 	$reseller_api_url = "https://www.activecampaign.com";
-	$reseller_api_key = "13d422639b2d02e555c29eefcdb0df54ce8d16ab85eee53be0eb82a528ec8021fb4e8263";
+	$reseller_api_key = "";
 	$path_to_api_wrapper = "../../activecampaign-api-php/includes";
 
 	function dbg($var, $continue = 0, $element = "pre")
