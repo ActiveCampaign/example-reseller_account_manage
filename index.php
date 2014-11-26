@@ -5,10 +5,9 @@
 	$your_domain = "yourdomain.com";
 	$reseller_api_url = "https://www.activecampaign.com";
 	$reseller_api_key = "";
-	$path_to_api_wrapper = "../../activecampaign-api-php/includes";
+	$path_to_api_wrapper = "../../activecampaign-api-php";
 
-	function dbg($var, $continue = 0, $element = "pre")
-	{
+	function dbg($var, $continue = 0, $element = "pre") {
 	  echo "<" . $element . ">";
 	  echo "Vartype: " . gettype($var) . "\n";
 	  if ( is_array($var) )
@@ -54,8 +53,8 @@
 	define("ACTIVECAMPAIGN_URL", $api_url);
 	define("ACTIVECAMPAIGN_API_KEY", $api_key);
 
-	require_once($path_to_api_wrapper . "/ActiveCampaign.class.php");
-	$ac = new ActiveCampaign(ACTIVECAMPAIGN_URL, ACTIVECAMPAIGN_API_KEY);
+	require $path_to_api_wrapper . "/examples-composer/vendor/autoload.php";
+	$ac = new ActiveCampaign($api_url, $api_key);
 //$ac->debug = true;
 
 	$alert = "";
@@ -142,6 +141,18 @@
 							// save account-specific API connection info to session
 							$_SESSION["account_api_url"] = $user_me->apiurl;
 							$_SESSION["account_api_key"] = $user_me->apikey;
+
+							// create new user in this account.
+							$user = array(
+								"username" => "user1",
+								"password" => "test",
+								"password_r" => "test",
+								"email" => "user1@test.com",
+								"first_name" => "User",
+								"last_name" => "One",
+								"group[3]" => "3",
+							);
+							$user_add = $ac2->api("user/add", $user);
 
 							// create "New List" webhook?
 							/*
@@ -323,10 +334,14 @@
 	if ($step == 1 || $step == 103) {
 		// get plans
 		$plans = $ac->api("account/plans");
-		$plans->plans->free = array(
-			"id" => 0,
-			"limit_sub" => 2500,
-		);
+		if (is_object($plans)) {
+			$plans->plans->free = array(
+				"id" => 0,
+				"limit_sub" => 2500,
+			);
+		} else {
+			$alert = "Plans could not be loaded. Please refresh the page to try again.";
+		}
 	}
 
 ?>
