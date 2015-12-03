@@ -220,8 +220,22 @@
 
 				$_SESSION["account_list_search"] = $search = $_POST["account_filter"];
 //$ac->debug = true;
-				$_SESSION["account_list"] = $account_list = $ac->api("account/list?search={$search}");
-//dbg($account_list);
+				$account_list_page = 1;
+				$account_list = $ac->api("account/list?search={$search}&page={$account_list_page}");
+
+				// Fetch additional pages.
+				while ($account_list->count == 20) {
+					// Since we only fetch 20 per page, if 20 are returned, there could be another page.
+					sleep(2);
+					$account_list_page++;
+					$account_list_nextpage = $ac->api("account/list?search={$search}&page={$account_list_page}");
+					$account_list->count = $account_list_nextpage->count;
+					if ($account_list->count) {
+						$account_list->accounts = array_merge($account_list->accounts, $account_list_nextpage->accounts);
+					}
+				}
+
+				$_SESSION["account_list"] = $account_list;
 
 			}
 			elseif ($step == 102) {
@@ -463,7 +477,7 @@
 
 			?>
 
-			<h2>Accounts</h2>
+			<h2>Accounts (<?php echo count($_SESSION["account_list"]->accounts); ?>)</h2>
 
 			<table border="1" cellspacing="0" cellpadding="3">
 
