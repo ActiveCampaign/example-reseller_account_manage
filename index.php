@@ -229,11 +229,9 @@
 					sleep(2);
 					$account_list_page++;
 					$account_list_nextpage = $ac->api("account/list?search={$search}&page={$account_list_page}");
-					if ($account_list_nextpage->count) {
+					$account_list->count = $account_list_nextpage->count;
+					if ($account_list->count) {
 						$account_list->accounts = array_merge($account_list->accounts, $account_list_nextpage->accounts);
-					} else {
-						// No results on this page.
-						break;
 					}
 				}
 
